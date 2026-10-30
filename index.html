@@ -3,696 +3,543 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>절차서 교육 시스템</title>
-<!-- SheetJS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<!-- FontAwesome for Icons -->
+<title>RA Portfolio</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --bg-main: #f8fafc;
-    --card-bg: #ffffff;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --line: #e2e8f0;
-    
-    --primary: #2563eb;
-    --primary-hover: #1d4ed8;
-    --primary-light: #eff6ff;
-    
-    --success: #10b981;
-    --success-light: #ecfdf5;
-    --danger: #ef4444;
-    --danger-light: #fef2f2;
-    --warning: #f59e0b;
-    --warning-light: #fffbeb;
-    
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 12px -2px rgba(0,0,0,0.08);
+    --blue: #2340b8;
+    --blue-dark: #1a3091;
+    --blue-soft: #eef1fb;
+    --ink: #1c2230;
+    --ink-2: #566074;
+    --ink-3: #8c95a6;
+    --line: #e3e7ee;
+    --bg: #f6f7fa;
+    --card: #ffffff;
+    --danger: #c0392b;
+    --header-h: 82px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  
+  html { scroll-behavior: smooth; }
   body {
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-    line-height: 1.5;
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid #7f95ee; outline-offset: 2px; }
 
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
-
-  /* HEADER */
+  /* ---------- HEADER ---------- */
   header {
-    background: var(--card-bg);
+    position: sticky; top: 0; z-index: 50;
+    height: var(--header-h);
+    background: #fff;
     border-bottom: 1px solid var(--line);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: var(--shadow-sm);
   }
-  
-  .header-top {
-    padding: 24px 0 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .header-in {
+    max-width: 1220px; height: 100%; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
   }
-
-  h1 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  .brand {
+    font-size: 1.35rem; font-weight: 700; color: var(--blue);
+    text-decoration: none; letter-spacing: -0.01em; white-space: nowrap;
   }
-  
-  h1 i { color: var(--primary); }
-
-  .missing { color: var(--text-muted); font-style: italic; font-weight: 400; font-size: 0.95rem; }
-
-  /* MAIN NAV (분야 탭) */
-  .areas-wrapper {
-    overflow-x: auto;
-    scrollbar-width: none; /* Firefox */
+  nav.top { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  nav.top::-webkit-scrollbar { display: none; }
+  nav.top button {
+    border: 0; background: none; cursor: pointer; font: inherit;
+    font-size: 0.95rem; font-weight: 500; color: var(--ink);
+    padding: 8px 14px; border-radius: 6px; white-space: nowrap;
+    border-bottom: 2px solid transparent;
   }
-  .areas-wrapper::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+  nav.top button:hover { color: var(--blue); }
+  nav.top button.active { color: var(--blue); border-bottom-color: var(--blue); border-radius: 6px 6px 0 0; }
 
-  .areas {
-    display: flex;
-    gap: 8px;
-    padding-bottom: 12px;
+  /* ---------- HERO ---------- */
+  /* 배경 사진은 index.html과 같은 폴더에 hero.jpg (또는 hero.png / hero.webp) 로 넣으면 적용됩니다. */
+  .hero {
+    position: relative;
+    min-height: calc(100vh - var(--header-h));
+    display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+    color: #fff; text-align: center;
+    background-color: #14301f;
+    background-image:
+      linear-gradient(rgba(6, 14, 8, 0.50), rgba(6, 14, 8, 0.56)),
+      url('hero.jpg'), url('hero.png'), url('hero.webp'),
+      radial-gradient(ellipse at 50% 30%, #2f5a3a 0%, #14301f 70%);
+    background-size: cover; background-position: center;
+    transition: min-height 0.35s ease;
   }
-
-  .areas button {
-    border: none;
-    background: transparent;
-    padding: 10px 18px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    cursor: pointer;
-    border-radius: var(--radius-sm);
-    white-space: nowrap;
-    transition: all 0.2s ease;
+  .hero.compact { min-height: 360px; }
+  .hero-title {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 56px 24px 24px;
   }
-
-  .areas button:hover {
-    background: var(--primary-light);
-    color: var(--primary);
+  .hero h1 {
+    font-size: clamp(1.9rem, 4.4vw, 3.3rem);
+    font-weight: 700; line-height: 1.3; letter-spacing: -0.02em;
+    text-shadow: 0 2px 14px rgba(0,0,0,0.45);
   }
+  .hero.compact h1 { font-size: clamp(1.6rem, 3.2vw, 2.4rem); }
+  .hero .sub { margin-top: 10px; font-size: 1rem; font-weight: 300; opacity: 0.85; }
 
-  .areas button.active {
-    background: var(--primary);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+  .menu {
+    display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap;
+    gap: 18px clamp(18px, 3.2vw, 56px);
+    padding: 0 20px 36px; width: 100%;
   }
-
-  /* MAIN CONTENT */
-  main { padding: 32px 0 80px; }
-
-  /* SUB TABS */
-  .subs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 28px;
-    background: #e2e8f033;
-    padding: 6px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--line);
-    width: fit-content;
+  .menu button {
+    border: 0; background: none; cursor: pointer; color: #fff; font: inherit;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    width: 120px;
   }
-
-  .subs button {
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    padding: 8px 18px;
-    border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  .menu button:nth-child(even) { transform: translateY(-22px); }
+  .menu .circle {
+    width: 96px; height: 96px; border-radius: 50%;
+    display: grid; place-items: center; font-size: 2rem;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
   }
+  .menu button:hover .circle { background: rgba(255, 255, 255, 0.22); border-color: rgba(255,255,255,0.8); transform: scale(1.06); }
+  .menu button.active .circle { background: rgba(255, 255, 255, 0.28); border-color: #fff; }
+  .menu .label { font-size: 0.88rem; font-weight: 500; line-height: 1.35; text-shadow: 0 1px 6px rgba(0,0,0,0.6); }
+  .hero.compact .menu { padding-bottom: 24px; }
+  .hero.compact .menu .circle { width: 64px; height: 64px; font-size: 1.35rem; }
+  .hero.compact .menu button { width: 104px; gap: 8px; }
+  .hero.compact .menu button:nth-child(even) { transform: none; }
 
-  .subs button:hover { color: var(--text-primary); }
+  /* ---------- CONTENT ---------- */
+  main { display: none; padding: 40px 0 90px; }
+  main.show { display: block; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 24px; }
 
-  .subs button.active {
-    background: var(--card-bg);
-    color: var(--primary);
-    box-shadow: var(--shadow-sm);
+  .page-head { margin-bottom: 8px; }
+  .page-head h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+  .page-head p { color: var(--ink-2); margin-top: 4px; font-size: 0.95rem; }
+
+  .tabs {
+    display: flex; gap: 4px; margin: 22px 0 8px; border-bottom: 1px solid var(--line);
+    overflow-x: auto; scrollbar-width: none;
   }
-
-  .subs .count {
-    background: var(--line);
-    color: var(--text-secondary);
-    padding: 2px 7px;
-    border-radius: 999px;
-    font-size: 0.75rem;
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs button {
+    border: 0; background: none; font: inherit; cursor: pointer; white-space: nowrap;
+    padding: 11px 16px; font-size: 0.93rem; font-weight: 500; color: var(--ink-2);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
   }
+  .tabs button:hover { color: var(--blue); }
+  .tabs button.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 700; }
 
-  .subs button.active .count {
-    background: var(--primary-light);
-    color: var(--primary);
+  h3.group {
+    font-size: 1.02rem; font-weight: 700; margin: 30px 0 12px;
+    padding-left: 10px; border-left: 4px solid var(--blue);
   }
-
-  /* SECTION TITLE */
-  h2 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 28px 0 14px;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  h2.topic-sep {
+    font-size: 1.25rem; font-weight: 700; margin: 46px 0 0; padding-top: 28px;
+    border-top: 2px solid var(--ink);
   }
-  h2::before {
-    content: '';
-    display: inline-block;
-    width: 4px;
-    height: 16px;
-    background: var(--primary);
-    border-radius: 2px;
-  }
-  h2:first-child { margin-top: 0; }
+  h2.topic-sep:first-of-type { margin-top: 24px; border-top: 0; padding-top: 0; }
 
-  /* EMPTY & NOTICE */
-  .empty {
-    background: var(--card-bg);
-    border: 2px dashed var(--line);
-    border-radius: var(--radius-lg);
-    padding: 48px 20px;
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.95rem;
-  }
-
-  .notice {
-    background: var(--danger-light);
-    border: 1px solid var(--danger);
-    color: var(--danger);
-    border-radius: var(--radius-md);
-    padding: 18px 20px;
-    font-weight: 500;
-  }
-
-  /* CARDS LIST */
-  .list { display: grid; gap: 12px; }
-
+  .list { display: grid; gap: 10px; }
   .item {
-    background: var(--card-bg);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    padding: 18px 22px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease;
+    background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 16px 20px; display: flex; flex-wrap: wrap; align-items: center;
+    justify-content: space-between; gap: 12px 16px;
   }
-
-  .item:hover {
-    border-color: #cbd5e1;
-    box-shadow: var(--shadow-md);
-  }
-
-  .item .info { flex: 1; min-width: 240px; }
-  .item .title { font-weight: 600; font-size: 1rem; color: var(--text-primary); }
-  .item .desc { color: var(--text-secondary); font-size: 0.88rem; margin-top: 4px; }
-
-  /* TAGS & BUTTONS */
-  .tag {
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 4px;
-    background: #f1f5f9;
-    color: var(--text-secondary);
-    border: 1px solid var(--line);
-    text-transform: uppercase;
-  }
-
-  .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-
+  .item .info { flex: 1; min-width: 220px; }
+  .item .code { font-size: 0.78rem; font-weight: 700; color: var(--blue); }
+  .item .name { font-weight: 500; font-size: 1rem; }
+  .item .note { color: var(--ink-2); font-size: 0.88rem; margin-top: 3px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .btn {
-    border: 1px solid var(--line);
-    background: var(--card-bg);
-    color: var(--text-secondary);
-    padding: 8px 14px;
-    border-radius: var(--radius-sm);
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s ease;
+    display: inline-flex; align-items: center; gap: 6px;
+    font: inherit; font-size: 0.85rem; font-weight: 500;
+    padding: 7px 13px; border-radius: 6px; cursor: pointer; text-decoration: none;
+    background: #fff; color: var(--ink-2); border: 1px solid var(--line);
   }
-
-  .btn:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    background: var(--primary-light);
-  }
-
-  .btn.primary {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: #fff;
-  }
-
-  .btn.primary:hover {
-    background: var(--primary-hover);
-    border-color: var(--primary-hover);
-    color: #fff;
-    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-  }
-
-  .slot { flex-basis: 100%; margin-top: 10px; }
+  .btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-soft); }
+  .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.primary:hover { background: var(--blue-dark); border-color: var(--blue-dark); color: #fff; }
+  .slot { flex-basis: 100%; }
   .slot:empty { display: none; }
+  .slot iframe.pdf { width: 100%; height: 76vh; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+  .slot video { width: 100%; max-height: 70vh; border-radius: 8px; background: #000; }
 
-  .pdf {
-    width: 100%;
-    height: 75vh;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    background: #fff;
-    margin-top: 10px;
+  .ref .name { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .ref .std { font-weight: 700; }
+
+  .empty {
+    border: 1.5px dashed #cdd3de; border-radius: 8px; background: #fff;
+    padding: 34px 20px; text-align: center; color: var(--ink-3); font-size: 0.93rem;
   }
+  .panel { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 22px 24px; }
+  .panel + .panel { margin-top: 12px; }
+  .panel h4 { font-size: 1rem; margin-bottom: 6px; }
+  .panel p, .panel li { color: var(--ink-2); font-size: 0.94rem; }
+  .panel ul { padding-left: 20px; }
 
-  .player {
-    background: #000;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    aspect-ratio: 16 / 9;
-    box-shadow: var(--shadow-md);
-    margin-top: 10px;
+  footer { text-align: center; color: var(--ink-3); font-size: 0.82rem; padding: 26px 0 34px; }
+
+  @media (max-width: 760px) {
+    :root { --header-h: 120px; }
+    .header-in { flex-direction: column; justify-content: center; gap: 4px; align-items: flex-start; }
+    nav.top { width: 100%; }
+    .menu .circle { width: 72px; height: 72px; font-size: 1.5rem; }
+    .menu button { width: 92px; }
+    .menu button:nth-child(even) { transform: none; }
+    .hero.compact .menu .circle { width: 54px; height: 54px; font-size: 1.1rem; }
+    .hero.compact .menu button { width: 84px; }
   }
-  .player video, .player iframe { width: 100%; height: 100%; border: 0; display: block; }
-
-  /* QUIZ STYLES */
-  .q {
-    background: var(--card-bg);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    padding: 20px 22px;
-    margin-bottom: 16px;
-    box-shadow: var(--shadow-sm);
-    transition: border-color 0.2s ease;
-  }
-
-  .q.correct { border-color: var(--success); background: var(--success-light); }
-  .q.wrong { border-color: var(--danger); background: var(--danger-light); }
-  .q.self { border-color: var(--warning); background: var(--warning-light); }
-
-  .q-head {
-    font-weight: 700;
-    font-size: 1.02rem;
-    margin-bottom: 14px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .q label {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: background 0.15s ease;
-    margin-bottom: 4px;
-  }
-
-  .q label:hover { background: #f1f5f9; }
-  .q label.answer { font-weight: 700; color: var(--success); background: #dcfce7; }
-  .q input[type=radio] { accent-color: var(--primary); width: 16px; height: 16px; }
-
-  .q textarea {
-    width: 100%;
-    min-height: 100px;
-    padding: 12px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    font-family: inherit;
-    font-size: 0.95rem;
-    resize: vertical;
-    background: #fff;
-    outline: none;
-  }
-  .q textarea:focus { border-color: var(--primary); }
-
-  .feedback {
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px dashed var(--line);
-    font-size: 0.92rem;
-    white-space: pre-wrap;
-    line-height: 1.6;
-  }
-  .feedback b { display: block; margin-bottom: 4px; font-weight: 700; }
-
-  .result {
-    background: var(--card-bg);
-    border: 2px solid var(--primary);
-    border-radius: var(--radius-md);
-    padding: 20px;
-    margin-bottom: 24px;
-    display: none;
-    text-align: center;
-    box-shadow: var(--shadow-md);
-  }
-  .result strong { font-size: 1.2rem; color: var(--primary); }
-
-  .quiz-actions { display: flex; gap: 10px; margin-top: 20px; }
-  .warn { color: var(--danger); font-size: 0.9rem; margin-top: 10px; font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="wrap">
-    <div class="header-top">
-      <h1 id="siteTitle"><i class="fa-solid fa-graduation-cap"></i> 절차서 교육</h1>
-    </div>
-    <div class="areas-wrapper">
-      <nav class="areas" id="areas"></nav>
-    </div>
+  <div class="header-in">
+    <a class="brand" href="#home" id="brand">RA Portfolio</a>
+    <nav class="top" id="topNav"></nav>
   </div>
 </header>
 
-<main>
-  <div class="wrap" id="content">
-    <div class="empty"><i class="fa-solid fa-spinner fa-spin"></i> 자료를 불러오는 중입니다…</div>
+<section class="hero" id="hero">
+  <div class="hero-title">
+    <div>
+      <h1 id="heroTitle"></h1>
+      <p class="sub" id="heroSub"></p>
+    </div>
   </div>
-</main>
+  <nav class="menu" id="menu" aria-label="주제 선택"></nav>
+</section>
+
+<main id="main"><div class="wrap" id="content"></div></main>
+<footer>RA Portfolio · 마이크로카테터 품질 서류 작성 연습</footer>
 
 <script>
-/* 데이터는 같은 폴더의 data.xlsx에서 읽습니다. 내용 수정은 엑셀에서 하세요. */
-const DATA_FILE = "data.xlsx";
+/* =====================================================================
+   내용 수정 안내
+   - 파일 경로는 index.html 기준 상대경로입니다. (현재 폴더 구조와 동일하게 맞춰져 있음)
+   - 폴더/파일 이름을 바꾸면 아래 경로도 같이 바꿔 주세요.
+   - 비어 있는 항목(review, found, fixed, reasons)은 내용을 채우면 바로 화면에 나옵니다.
+   ===================================================================== */
 
-const SUB_TABS = [
-  { id: "docs", label: "절차서·양식", icon: "fa-file-lines" },
-  { id: "video", label: "비디오", icon: "fa-circle-play" },
-  { id: "quiz", label: "시험", icon: "fa-pen-to-square" },
-  { id: "ref", label: "참고자료", icon: "fa-bookmark" },
+const R = "001. 위험 관리";
+const S = "002. 공급업체 관리";
+const V = "003. 멸균 공정 밸리데이션";
+const C = "004. CAPA 절차";
+const U = "005. UDI 관리";
+
+const TABS = [
+  { id: "docs",   label: "제작한 서류 목록" },
+  { id: "refs",   label: "서류별 참고 규격" },
+  { id: "review", label: "서류 평가" },
+  { id: "found",  label: "부적합 발견 사항" },
+  { id: "fixed",  label: "부적합 수정 사항" },
 ];
 
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
-  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const str = v => String(v ?? "").trim();
-const ext = f => (str(f).split("?")[0].split(".").pop() || "").toLowerCase();
-const toUrl = p => /^https?:\/\//i.test(p) ? p : str(p).split("/").map(encodeURIComponent).join("/");
-const emptyBox = msg => `<div class="empty">${msg}</div>`;
-const titleOf = t => esc(t) || '<span class="missing">제목 미입력</span>';
-const youtubeId = url => (String(url).match(/(?:youtu\.be\/|v=|embed\/|shorts\/|live\/)([\w-]{11})/) || [])[1] || null;
+/* 홈·품목 선정 이유 */
+const HOME = { title: "성공적인 RA 업무 수행을 위한<br>연습의 기록" };
+const ITEM = {
+  id: "item", icon: "fa-syringe", label: "품목(마이크로카테터)<br>선정 이유",
+  title: "품목(마이크로카테터) 선정 이유",
+  /* 선정 이유를 문장으로 적어 넣으세요. 예: "reasons: ['이유 1', '이유 2']" */
+  reasons: [],
+};
 
-let DB = { docs: [], quiz: [], refs: [], areas: [] };
-let state = { area: null, sub: "docs" };
+/* 서류 항목: kind=구분, code=문서번호, title=서류명, files={pdf, docx, xlsx, video} */
+const TOPICS = [
+  {
+    id: "risk", icon: "fa-triangle-exclamation", label: "위험관리", name: "위험관리",
+    desc: "QP-71-01 위험관리 절차서와 관련 양식",
+    docs: [
+      { kind: "절차서", code: "QP-71-01", title: "위험관리 절차서",
+        files: { pdf: `${R}/001. 절차서/QP-71-01_위험관리_절차서.pdf`, docx: `${R}/001. 절차서/QP-71-01_위험관리_절차서.docx` } },
+      { kind: "양식", code: "QP-71-01-F01", title: "위험관리 계획서",
+        files: { pdf: `${R}/002. 관련 양식/001. 위험관리 계획서/위험관리계획서_QP-71-01-F01.pdf` } },
+      { kind: "양식", code: "QP-71-01-F02", title: "위험관리 보고서",
+        files: { pdf: `${R}/002. 관련 양식/002. 위험관리 보고서/QP-71-01-F02_위험관리_보고서.pdf`, docx: `${R}/002. 관련 양식/002. 위험관리 보고서/QP-71-01-F02_위험관리_보고서.docx` } },
+      { kind: "양식", code: "QP-71-F03", title: "제조공정 FMEA",
+        files: { pdf: `${R}/002. 관련 양식/003. 위험관리 제조공정 FMEA/QP-71-F03_제조공정_FMEA.pdf`, docx: `${R}/002. 관련 양식/003. 위험관리 제조공정 FMEA/QP-71-F03_제조공정_FMEA_수정본.docx` } },
+    ],
+    refs: [
+      { std: "ISO 14971:2019", title: "의료기기 — 위험관리의 의료기기 적용", desc: "위험관리 절차·계획서·보고서의 기본 요구사항" },
+      { std: "ISO/TR 24971:2020", title: "ISO 14971 적용 지침", desc: "위험 분석·평가·통제 방법 해설" },
+      { std: "IEC 60812", title: "FMEA 기법", desc: "제조공정 FMEA 작성 방법" },
+      { std: "ISO 13485:2016 7.1", title: "제품 실현의 기획", desc: "제품 실현 과정에서의 위험관리 요구" },
+    ],
+    review: [], found: [], fixed: [],
+  },
+  {
+    id: "supplier", icon: "fa-clipboard-check", label: "공급업체관리", name: "공급업체관리",
+    desc: "QP-74-01 공급업체 관리 절차서와 관련 양식, 발표 영상",
+    docs: [
+      { kind: "절차서", code: "QP-74-01", title: "공급업체 관리 절차서",
+        files: { pdf: `${S}/001. 절차서/QP-74-01_공급업체_관리_절차서.pdf`, docx: `${S}/001. 절차서/QP-74-01_공급업체_관리_절차서.docx` } },
+      { kind: "양식", code: "QP-74-01-F01", title: "공급업체 등록 및 평가서",
+        files: { pdf: `${S}/002. 관련 양식/001. 공급업체 등록 및 평가서/QP-74-01-F01_공급업체_등록_및_평가서__1_.pdf`, docx: `${S}/002. 관련 양식/001. 공급업체 등록 및 평가서/QP-74-01-F01_공급업체_등록_및_평가서 (1).docx` } },
+      { kind: "양식", code: "QP-74-01-F02", title: "승인 공급업체 관리대장",
+        files: { pdf: `${S}/002. 관련 양식/002. 승인 공급 업체 관리대장/QP-74-01-F02_승인_공급업체_관리_대장.pdf`, docx: `${S}/002. 관련 양식/002. 승인 공급 업체 관리대장/QP-74-01-F02_승인_공급업체_관리_대장.docx` } },
+      { kind: "발표 영상", code: "QP-74-01", title: "공급업체 관리 절차서 발표",
+        files: { video: `${S}/005. 발표 영상/001. 절차서/QP-74-01 공급업체 관리 절차서 발표.mp4` } },
+    ],
+    refs: [
+      { std: "ISO 13485:2016 7.4", title: "구매", desc: "구매 프로세스, 공급업체 평가·선정·재평가 기준" },
+      { std: "의료기기 제조 및 품질관리 기준(GMP)", title: "구매관리 조항", desc: "공급업체 승인 및 관리 요구사항" },
+    ],
+    review: [], found: [], fixed: [],
+  },
+  {
+    id: "steril", icon: "fa-flask", label: "멸균 공정<br>밸리데이션", name: "멸균 공정 밸리데이션",
+    desc: "EO 멸균 공정 밸리데이션 절차서와 관련 양식",
+    docs: [
+      { kind: "절차서", code: "", title: "EO 멸균 공정 밸리데이션 절차서",
+        files: { pdf: `${V}/001. 절차서 양식/EO_멸균_공정_밸리데이션_절차서.pdf`, docx: `${V}/001. 절차서 양식/EO_멸균_공정_밸리데이션_절차서.docx` } },
+      { kind: "양식", code: "", title: "완제품 검사성적서",
+        files: { pdf: `${V}/002. 관련 양식/001. 완제품 검사성적서/완제품 검사성적서.pdf` } },
+      { kind: "양식", code: "", title: "공정검사지침서",
+        files: { pdf: `${V}/002. 관련 양식/002. 공정검사지침서/공정검사지침서.pdf`, docx: `${V}/002. 관련 양식/002. 공정검사지침서/공정검사지침서.docx` } },
+      { kind: "양식", code: "", title: "바이오 버든 선정 가이드",
+        files: { pdf: `${V}/002. 관련 양식/003. 바이오 버든 선정 가이드/바이오 버든 선정 가이드.pdf`, docx: `${V}/002. 관련 양식/003. 바이오 버든 선정 가이드/바이오 버든 선정 가이드.docx` } },
+    ],
+    refs: [
+      { std: "ISO 11135", title: "에틸렌옥사이드 멸균 — 밸리데이션 및 상시 관리", desc: "EO 멸균 공정 개발·밸리데이션·일상 관리 요구사항" },
+      { std: "ISO 11737-1", title: "미생물 시험 — 바이오버든 측정", desc: "바이오 버든 선정·측정 방법" },
+      { std: "ISO 11737-2", title: "미생물 시험 — 무균시험", desc: "멸균 밸리데이션에서의 무균시험" },
+      { std: "ISO 10993-7", title: "EO 멸균 잔류량", desc: "EO·ECH 잔류 허용 한계" },
+    ],
+    review: [], found: [], fixed: [],
+  },
+  {
+    id: "capa", icon: "fa-arrows-rotate", label: "CAPA 절차", name: "CAPA 절차",
+    desc: "QP-85-01 시정 및 예방조치 절차서, 양식, 관리대장, 부적합 보고서(NCR)",
+    docs: [
+      { kind: "절차서", code: "QP-85-01", title: "시정 및 예방조치 절차서 (4차 수정)",
+        files: { pdf: `${C}/001. 절차서/QP-85-01_시정_및_예방조치_절차서.pdf`, docx: `${C}/001. 절차서/QP-85-01_시정_및_예방조치_절차서_4차 수정.docx` } },
+      { kind: "양식", code: "QP-85-01-F01", title: "시정 및 예방조치 요구·보고서",
+        files: { pdf: `${C}/002. 관련 양식/001. 시정조치 및 예방조치 요구, 보고서/QP-85-01-F01_시정_및_예방조치_요구_보고서.pdf`, docx: `${C}/002. 관련 양식/001. 시정조치 및 예방조치 요구, 보고서/QP-85-01-F01_시정_및_예방조치_요구_보고서.docx` } },
+      { kind: "양식", code: "QP-85-01-F01", title: "시정조치 및 예방조치 관리대장",
+        files: { pdf: `${C}/002. 관련 양식/002. 시정조치 및 예방조치 요구, 보고서 관리 대장/QP-85-01-F01_시정조치_및_예방조치_관리대장.pdf`, xlsx: `${C}/002. 관련 양식/002. 시정조치 및 예방조치 요구, 보고서 관리 대장/QP-85-01-F01_시정조치_및_예방조치_관리대장.xlsx` } },
+    ],
+    refs: [
+      { std: "ISO 13485:2016 8.3", title: "부적합 제품의 관리", desc: "부적합 식별·처리 요구사항" },
+      { std: "ISO 13485:2016 8.5.2", title: "시정조치", desc: "원인 분석 및 재발 방지 조치" },
+      { std: "ISO 13485:2016 8.5.3", title: "예방조치", desc: "잠재 부적합 원인 제거" },
+    ],
+    review: [],
+    found: [
+      { kind: "부적합 보고서", code: "QP-85-01", title: "부적합 보고서(NCR)",
+        files: { pdf: `${C}/004. 부적합/QP-85-01_부적합보고서_NCR_회신.pdf`, docx: `${C}/004. 부적합/QP-85-01_부적합보고서_NCR_회신.docx` } },
+    ],
+    fixed: [
+      { kind: "NCR 회신", code: "QP-85-01", title: "부적합 보고서(NCR) 회신",
+        files: { pdf: `${C}/004. 부적합/QP-85-01_부적합보고서_NCR_회신.pdf`, docx: `${C}/004. 부적합/QP-85-01_부적합보고서_NCR_회신.docx` } },
+    ],
+  },
+  {
+    id: "udi", icon: "fa-barcode", label: "UDI 관리", name: "UDI 관리",
+    desc: "QP-758-01 UDI 절차서와 관련 양식 (F01~F03)",
+    docs: [
+      { kind: "절차서", code: "QP-758-01", title: "UDI 절차서",
+        files: { pdf: `${U}/001. 절차서/QP-758-01_UDI_절차서.pdf`, docx: `${U}/001. 절차서/QP-758-01_UDI_절차서.docx` } },
+      { kind: "양식", code: "QP-758-01-F01", title: "UDI 체계 수립 및 코드 생성 기록",
+        files: { pdf: `${U}/002. 관련 양식/001. UDI 체계 수립 및 코드 생성/QP-758-01-F01_UDI체계수립및코드생성기록.pdf`, docx: `${U}/002. 관련 양식/001. UDI 체계 수립 및 코드 생성/QP-758-01-F01_UDI체계수립및코드생성기록.docx` } },
+      { kind: "양식", code: "QP-758-01-F02", title: "라벨링 및 포장 인쇄 적용",
+        files: { pdf: `${U}/002. 관련 양식/002. 라벨링 및 포장 인쇄 적용/QP-758-01-F02(마이크로카테터_UDI품질절차서_라벨링 및 포장인쇄).pdf`, docx: `${U}/002. 관련 양식/002. 라벨링 및 포장 인쇄 적용/QP-758-01-F02(마이크로카테터_UDI품질절차서_라벨링 및 포장인쇄).docx` } },
+      { kind: "양식", code: "QP-758-01-F03", title: "통합시스템 등록 및 추적관리",
+        files: { pdf: `${U}/002. 관련 양식/003. 통합시스템 등록 및 추적관리/QP-758-01-F03_작성예시_KMHSE-02-10.pdf`, docx: `${U}/002. 관련 양식/003. 통합시스템 등록 및 추적관리/QP-758-01-F03_작성예시_KMHSE-02-10.docx` } },
+    ],
+    refs: [
+      { std: "의료기기 UDI 관련 규정(식약처)", title: "의료기기 고유식별코드(UDI) 표시·보고", desc: "UDI 표기, 통합정보센터 등록·공급내역 보고" },
+      { std: "GS1 General Specifications", title: "GS1 표준", desc: "GTIN, 로트·제조일·유효기한 등 AI 구성" },
+      { std: "ISO 13485:2016 7.5.8 / 7.5.9", title: "식별 및 추적성", desc: "제품 식별과 추적성 확보 요구" },
+    ],
+    review: [], found: [], fixed: [],
+  },
+];
 
-/* ---------- 엑셀 읽기 ---------- */
-function rowsOf(wb, name) {
-  const ws = wb.Sheets[name];
-  if (!ws) return [];
-  return XLSX.utils.sheet_to_json(ws, { defval: "" })
-    .map(r => Object.fromEntries(Object.entries(r).map(([k, v]) => [str(k), v])))
-    .filter(r => str(r["분야"]));
+/* 상단 아이콘 메뉴 */
+const MENU = [
+  { id: "home", icon: "fa-house", label: "홈" },
+  ITEM,
+  ...TOPICS,
+];
+
+/* ================= 화면 로직 ================= */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const toUrl = p => String(p).split("/").map(encodeURIComponent).join("/");
+const extOf = p => p.split(".").pop().toLowerCase();
+
+let state = { topic: "home", tab: null };
+
+function parseHash() {
+  const [t, tab] = decodeURIComponent(location.hash.slice(1)).split("/");
+  state.topic = MENU.some(m => m.id === t) ? t : "home";
+  state.tab = TABS.some(x => x.id === tab) ? tab : null;
+  if (state.topic !== "home" && state.topic !== "item" && !state.tab) state.tab = "docs";
 }
-
-async function load() {
-  const content = document.getElementById("content");
-  if (typeof XLSX === "undefined") {
-    content.innerHTML = `<div class="notice"><i class="fa-solid fa-triangle-exclamation"></i> 엑셀을 읽는 프로그램(SheetJS)을 불러오지 못했습니다. 인터넷 연결이나 네트워크 상태를 확인해 주세요.</div>`;
-    return;
-  }
-  let wb;
-  try {
-    const res = await fetch(DATA_FILE + "?v=" + Date.now(), { cache: "no-store" });
-    if (!res.ok) throw new Error(res.status);
-    wb = XLSX.read(await res.arrayBuffer(), { type: "array" });
-  } catch (e) {
-    content.innerHTML = location.protocol === "file:"
-      ? `<div class="notice"><i class="fa-solid fa-triangle-exclamation"></i> PC에서 파일을 직접 열면 보안 설정 때문에 data.xlsx를 읽을 수 없습니다. 웹 서버 환경(GitHub Pages 등)을 이용해 주세요.</div>`
-      : `<div class="notice"><i class="fa-solid fa-triangle-exclamation"></i> data.xlsx를 불러오지 못했습니다. index.html과 같은 폴더에 data.xlsx 파일이 존재하는지 확인해 주세요.</div>`;
-    return;
-  }
-
-  // 설정
-  const setting = (XLSX.utils.sheet_to_json(wb.Sheets["설정"] || {}, { header: 1, defval: "" }) || [])
-    .find(r => str(r[0]) === "사이트 제목");
-  const title = setting ? str(setting[1]) : "";
-  const titleEl = document.getElementById("siteTitle");
-  if (title) { titleEl.innerHTML = `<i class="fa-solid fa-graduation-cap"></i> ${title}`; document.title = title; }
-  else titleEl.innerHTML = '<i class="fa-solid fa-graduation-cap"></i> <span class="missing">사이트 제목 미입력 (data.xlsx › 설정 시트)</span>';
-
-  DB.docs = rowsOf(wb, "자료").map(r => ({
-    area: str(r["분야"]), kind: str(r["구분"]), title: str(r["제목"]),
-    view: str(r["보기파일(PDF)"]), file: str(r["원본파일"]),
-  }));
-  DB.quiz = rowsOf(wb, "시험문제").map((r, i) => ({
-    area: str(r["분야"]), no: Number(r["번호"]) || 1e6 + i, type: str(r["유형"]) || "객관식",
-    q: str(r["문제"]),
-    options: ["보기1", "보기2", "보기3", "보기4"].map(k => str(r[k])).filter(Boolean),
-    answer: str(r["정답"]), explain: str(r["해설"]),
-  }));
-  DB.refs = rowsOf(wb, "참고자료").map(r => ({
-    area: str(r["분야"]), kind: str(r["구분"]), title: str(r["제목"]),
-    url: str(r["URL"]), desc: str(r["설명"]),
-  }));
-
-  const seen = [];
-  [...DB.docs, ...DB.quiz, ...DB.refs].forEach(r => {
-    if (r.area !== "공통" && !seen.includes(r.area)) seen.push(r.area);
-  });
-  DB.areas = seen;
-
-  if (!DB.areas.length) {
-    content.innerHTML = emptyBox("data.xlsx에 등록된 자료가 없습니다.");
-    return;
-  }
-
-  const [a, s] = decodeURIComponent(location.hash.slice(1)).split("/");
-  state.area = DB.areas.includes(a) ? a : DB.areas[0];
-  state.sub = SUB_TABS.some(t => t.id === s) ? s : "docs";
-  renderAreas();
+function go(topic, tab) {
+  state.topic = topic;
+  state.tab = tab ?? null;
+  if (topic !== "home" && topic !== "item" && !state.tab) state.tab = "docs";
+  history.replaceState(null, "", "#" + topic + (state.tab ? "/" + state.tab : ""));
   render();
+  window.scrollTo({ top: 0 });
 }
 
-/* ---------- 탭 ---------- */
-function renderAreas() {
-  const nav = document.getElementById("areas");
-  nav.innerHTML = DB.areas.map(a =>
-    `<button data-area="${esc(a)}" class="${a === state.area ? "active" : ""}">${esc(a)}</button>`).join("");
-  nav.onclick = e => {
-    const b = e.target.closest("button");
-    if (!b) return;
-    state.area = b.dataset.area;
-    state.sub = "docs";
-    renderAreas();
-    render();
-  };
-}
-
-function counts(area) {
-  return {
-    docs: DB.docs.filter(d => d.area === area && d.kind !== "비디오").length,
-    video: DB.docs.filter(d => d.area === area && d.kind === "비디오").length,
-    quiz: DB.quiz.filter(q => q.area === area).length,
-    ref: DB.refs.filter(r => r.area === area || r.area === "공통").length,
-  };
-}
-
-function render() {
-  history.replaceState(null, "", "#" + encodeURIComponent(state.area) + "/" + state.sub);
-  const c = counts(state.area);
-  const content = document.getElementById("content");
-  content.innerHTML = `
-    <div class="subs" id="subs">
-      ${SUB_TABS.map(t => `<button data-sub="${t.id}" class="${t.id === state.sub ? "active" : ""}"><i class="fa-solid ${t.icon}"></i>${t.label}<span class="count">${c[t.id]}</span></button>`).join("")}
-    </div>
-    <div id="panel"></div>`;
-  document.getElementById("subs").onclick = e => {
-    const b = e.target.closest("button");
-    if (!b) return;
-    state.sub = b.dataset.sub;
-    render();
-  };
-  const panel = document.getElementById("panel");
-  ({ docs: renderDocs, video: renderVideo, quiz: renderQuiz, ref: renderRefs })[state.sub](panel);
-}
-
-/* ---------- 절차서·양식 ---------- */
-function docItem(d, key) {
-  const fileExt = d.file ? ext(d.file) : "";
-  const canView = d.view && ext(d.view) === "pdf";
+/* ---- 서류 카드 ---- */
+let uid = 0;
+function docItem(d) {
+  const f = d.files || {};
+  const id = "s" + (uid++);
+  const others = Object.entries(f).filter(([k]) => k !== "pdf" && k !== "video");
   return `
   <div class="item">
     <div class="info">
-      <div class="title">${titleOf(d.title)}</div>
-      ${!d.file && !d.view ? '<div class="desc missing">파일 경로 미입력</div>' : ""}
+      ${d.code ? `<div class="code">${esc(d.code)}</div>` : ""}
+      <div class="name">${esc(d.title)}</div>
+      ${d.note ? `<div class="note">${esc(d.note)}</div>` : ""}
     </div>
     <div class="actions">
-      ${fileExt ? `<span class="tag">${esc(fileExt)}</span>` : ""}
-      ${canView ? `<button class="btn" data-view="${key}"><i class="fa-regular fa-eye"></i> 미리보기</button>
-                   <a class="btn" href="${toUrl(d.view)}" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> 새 창</a>` : ""}
-      ${d.file ? `<a class="btn primary" href="${toUrl(d.file)}" download><i class="fa-solid fa-download"></i> 다운로드</a>` : ""}
+      ${f.pdf ? `<button class="btn" data-pdf="${esc(f.pdf)}" data-slot="${id}"><i class="fa-regular fa-eye"></i> 미리보기</button>
+                 <a class="btn" href="${toUrl(f.pdf)}" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> 새 창</a>` : ""}
+      ${f.video ? `<button class="btn" data-video="${esc(f.video)}" data-slot="${id}"><i class="fa-solid fa-play"></i> 영상 재생</button>` : ""}
+      ${others.map(([k, p]) => `<a class="btn primary" href="${toUrl(p)}" download><i class="fa-solid fa-download"></i> ${esc(k.toUpperCase())}</a>`).join("")}
+      ${f.pdf ? `<a class="btn primary" href="${toUrl(f.pdf)}" download><i class="fa-solid fa-download"></i> PDF</a>` : ""}
     </div>
-    <div class="slot" id="slot-${key}"></div>
+    <div class="slot" id="${id}"></div>
   </div>`;
 }
 
-function renderDocs(panel) {
-  const items = DB.docs.filter(d => d.area === state.area && d.kind !== "비디오");
-  if (!items.length) { panel.innerHTML = emptyBox("등록된 절차서·양식이 없습니다."); return; }
-  const order = ["절차서", "양식", "부적합 사례"];
-  const kinds = [...new Set([...order.filter(k => items.some(d => d.kind === k)),
-                             ...items.map(d => d.kind)])];
-  panel.innerHTML = kinds.map(k => `
-    <h2>${esc(k) || "구분 미입력"}</h2>
-    <div class="list">${items.map((d, i) => d.kind === k ? docItem(d, i) : "").join("")}</div>`).join("");
-  panel.onclick = e => {
-    const b = e.target.closest("[data-view]");
-    if (!b) return;
-    const slot = document.getElementById("slot-" + b.dataset.view);
-    if (slot.innerHTML) { slot.innerHTML = ""; b.innerHTML = '<i class="fa-regular fa-eye"></i> 미리보기'; }
+function docsHtml(list, emptyMsg) {
+  if (!list.length) return `<div class="empty">${emptyMsg}</div>`;
+  const kinds = [...new Set(list.map(d => d.kind))];
+  return kinds.map(k => `
+    <h3 class="group">${esc(k)}</h3>
+    <div class="list">${list.filter(d => d.kind === k).map(docItem).join("")}</div>`).join("");
+}
+
+function refsHtml(list) {
+  if (!list.length) return `<div class="empty">참고 규격을 입력하면 이곳에 표시됩니다.</div>`;
+  return `<div class="list">${list.map(r => `
+    <div class="item ref"><div class="info">
+      <div class="name"><span class="std">${esc(r.std)}</span><span>${esc(r.title)}</span></div>
+      ${r.desc ? `<div class="note">${esc(r.desc)}</div>` : ""}
+    </div></div>`).join("")}</div>`;
+}
+
+function reviewHtml(list) {
+  if (!list.length) return `<div class="empty">서류 평가 내용을 입력하면 이곳에 표시됩니다.</div>`;
+  return list.map(r => `<div class="panel"><h4>${esc(r.title)}</h4><p>${esc(r.text)}</p></div>`).join("");
+}
+
+function tabBody(t, tab) {
+  switch (tab) {
+    case "docs":   return docsHtml(t.docs, "등록된 서류가 없습니다.");
+    case "refs":   return refsHtml(t.refs);
+    case "review": return reviewHtml(t.review);
+    case "found":  return docsHtml(t.found, "발견된 부적합 사항이 아직 등록되지 않았습니다.");
+    case "fixed":  return docsHtml(t.fixed, "부적합 수정 사항이 아직 등록되지 않았습니다.");
+  }
+}
+
+/* ---- 화면 그리기 ---- */
+function renderTopNav() {
+  $("topNav").innerHTML = TABS.map(t =>
+    `<button data-tab="${t.id}" class="${state.tab === t.id ? "active" : ""}">${t.label}</button>`).join("");
+}
+function renderMenu() {
+  $("menu").innerHTML = MENU.map(m => `
+    <button data-topic="${m.id}" class="${state.topic === m.id ? "active" : ""}">
+      <span class="circle"><i class="fa-solid ${m.icon}"></i></span>
+      <span class="label">${m.label}</span>
+    </button>`).join("");
+}
+
+function render() {
+  const { topic, tab } = state;
+  const isHomeIdle = topic === "home" && !tab;
+  const hero = $("hero"), main = $("main"), content = $("content");
+
+  hero.classList.toggle("compact", !isHomeIdle);
+  main.classList.toggle("show", !isHomeIdle);
+  renderTopNav();
+  renderMenu();
+
+  const cur = MENU.find(m => m.id === topic);
+  if (topic === "home") {
+    $("heroTitle").innerHTML = isHomeIdle ? HOME.title : "전체 서류";
+    $("heroSub").textContent = isHomeIdle ? "" : "모든 주제의 " + TABS.find(x => x.id === tab).label;
+  } else if (topic === "item") {
+    $("heroTitle").innerHTML = ITEM.title;
+    $("heroSub").textContent = "";
+  } else {
+    $("heroTitle").innerHTML = cur.name;
+    $("heroSub").textContent = cur.desc;
+  }
+  if (isHomeIdle) return;
+
+  if (topic === "item") {
+    content.innerHTML = `
+      <div class="page-head"><h2>${ITEM.title}</h2></div>
+      ${ITEM.reasons.length
+        ? `<div class="panel"><ul>${ITEM.reasons.map(r => `<li>${esc(r)}</li>`).join("")}</ul></div>`
+        : `<div class="empty">품목 선정 이유를 입력하면 이곳에 표시됩니다.</div>`}`;
+    return;
+  }
+
+  const tabs = `<div class="tabs">${TABS.map(t =>
+    `<button data-tab="${t.id}" class="${tab === t.id ? "active" : ""}">${t.label}</button>`).join("")}</div>`;
+  const label = TABS.find(x => x.id === tab).label;
+
+  if (topic === "home") {
+    content.innerHTML = `<div class="page-head"><h2>${label}</h2><p>모든 주제를 한 번에 모아 봅니다.</p></div>${tabs}`
+      + TOPICS.map(t => `<h2 class="topic-sep">${esc(t.name)}</h2>${tabBody(t, tab)}`).join("");
+  } else {
+    const t = TOPICS.find(x => x.id === topic);
+    content.innerHTML = `<div class="page-head"><h2>${esc(t.name)}</h2><p>${esc(t.desc)}</p></div>${tabs}${tabBody(t, tab)}`;
+  }
+}
+
+/* ---- 이벤트 ---- */
+document.addEventListener("click", e => {
+  const tabBtn = e.target.closest("[data-tab]");
+  if (tabBtn) { go(state.topic === "item" ? "home" : state.topic, tabBtn.dataset.tab); return; }
+
+  const topicBtn = e.target.closest("[data-topic]");
+  if (topicBtn) { go(topicBtn.dataset.topic, topicBtn.dataset.topic === "home" ? null : state.tab && state.topic !== "item" ? state.tab : "docs"); return; }
+
+  if (e.target.closest("#brand")) { e.preventDefault(); go("home", null); return; }
+
+  const pdfBtn = e.target.closest("[data-pdf]");
+  const vidBtn = e.target.closest("[data-video]");
+  const btn = pdfBtn || vidBtn;
+  if (btn) {
+    const slot = $(btn.dataset.slot);
+    const open = !!slot.innerHTML;
+    const origin = pdfBtn ? '<i class="fa-regular fa-eye"></i> 미리보기' : '<i class="fa-solid fa-play"></i> 영상 재생';
+    if (open) { slot.innerHTML = ""; btn.innerHTML = origin; }
     else {
-      slot.innerHTML = `<iframe class="pdf" src="${toUrl(items[b.dataset.view].view)}"></iframe>`;
-      b.innerHTML = '<i class="fa-solid fa-xmark"></i> 닫기';
+      slot.innerHTML = pdfBtn
+        ? `<iframe class="pdf" src="${toUrl(btn.dataset.pdf)}" title="PDF 미리보기"></iframe>`
+        : `<video src="${toUrl(btn.dataset.video)}" controls preload="metadata"></video>`;
+      btn.innerHTML = '<i class="fa-solid fa-xmark"></i> 닫기';
     }
-  };
-}
+  }
+});
+window.addEventListener("hashchange", () => { parseHash(); render(); });
 
-/* ---------- 비디오 ---------- */
-function playerHtml(src) {
-  const yt = youtubeId(src);
-  if (yt) return `<div class="player"><iframe src="https://www.youtube.com/embed/${yt}" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
-  return `<div class="player"><video src="${toUrl(src)}" controls preload="metadata"></video></div>`;
-}
-
-function renderVideo(panel) {
-  const items = DB.docs.filter(d => d.area === state.area && d.kind === "비디오");
-  if (!items.length) { panel.innerHTML = emptyBox("이 분야에 등록된 비디오가 없습니다."); return; }
-  panel.innerHTML = `<div class="list">${items.map(v => `
-    <div class="item">
-      <div class="info">
-        <div class="title">${titleOf(v.title)}</div>
-        <div class="slot">${v.file ? playerHtml(v.file) : '<div class="desc missing">파일 경로 미입력</div>'}</div>
-      </div>
-    </div>`).join("")}</div>`;
-}
-
-/* ---------- 시험 ---------- */
-function renderQuiz(panel) {
-  const qs = DB.quiz.filter(q => q.area === state.area).sort((a, b) => a.no - b.no);
-  if (!qs.length) { panel.innerHTML = emptyBox("이 분야에 등록된 시험문제가 없습니다."); return; }
-
-  panel.innerHTML = `
-    <div class="result" id="result"></div>
-    <form id="quizForm" autocomplete="off">
-      ${qs.map((q, i) => `
-        <div class="q" id="q${i}">
-          <div class="q-head"><span>Q${i + 1}.</span><span>${esc(q.q)}</span><span class="tag">${esc(q.type)}</span></div>
-          ${q.type === "주관식"
-            ? `<textarea name="q${i}" placeholder="답안을 입력하세요..."></textarea>`
-            : q.options.map((o, j) => `
-              <label data-j="${j + 1}"><input type="radio" name="q${i}" value="${j + 1}"><span>${j + 1}) ${esc(o)}</span></label>`).join("")}
-          <div class="feedback" hidden></div>
-        </div>`).join("")}
-      <div class="quiz-actions">
-        <button type="submit" class="btn primary"><i class="fa-solid fa-check"></i> 채점하기</button>
-        <button type="button" class="btn" id="retry"><i class="fa-solid fa-rotate-right"></i> 다시 풀기</button>
-      </div>
-      <div class="warn" id="warn"></div>
-    </form>`;
-
-  const form = document.getElementById("quizForm");
-  form.onsubmit = e => {
-    e.preventDefault();
-    let mcTotal = 0, mcOk = 0, saTotal = 0, unanswered = 0;
-    qs.forEach((q, i) => {
-      const box = document.getElementById("q" + i);
-      const fb = box.querySelector(".feedback");
-      box.classList.remove("correct", "wrong", "self");
-      fb.hidden = false;
-      if (q.type === "주관식") {
-        saTotal++;
-        if (!str(form.elements["q" + i].value)) unanswered++;
-        box.classList.add("self");
-        fb.innerHTML = `<b><i class="fa-solid fa-lightbulb"></i> 모범답안</b>${esc(q.answer) || '<span class="missing">모범답안 미입력</span>'}`
-          + (q.explain ? `<b style="margin-top:8px"><i class="fa-solid fa-circle-info"></i> 해설</b>${esc(q.explain)}` : "");
-      } else {
-        mcTotal++;
-        const sel = form.querySelector(`input[name="q${i}"]:checked`);
-        if (!sel) unanswered++;
-        const ans = parseInt(q.answer, 10);
-        const ok = !!sel && +sel.value === ans;
-        if (ok) mcOk++;
-        box.classList.add(ok ? "correct" : "wrong");
-        box.querySelectorAll("label").forEach(l => l.classList.toggle("answer", +l.dataset.j === ans));
-        fb.innerHTML = `<b>${ok ? '<i class="fa-solid fa-circle-check"></i> 정답입니다.' : '<i class="fa-solid fa-circle-xmark"></i> 오답입니다.' + (ans ? ` (정답: ${ans}번)` : " (정답 미입력)")}</b>`
-          + (q.explain ? esc(q.explain) : "");
-      }
-    });
-    const result = document.getElementById("result");
-    result.style.display = "block";
-    result.innerHTML = (mcTotal ? `<strong>객관식 ${mcTotal}문제 중 ${mcOk}문제 정답</strong>` : "")
-      + (saTotal ? `<div style="margin-top: 4px; font-size: 0.95rem; color: var(--text-secondary);">주관식 ${saTotal}문제는 모범답안과 직접 비교해보세요.</div>` : "");
-    document.getElementById("warn").textContent = unanswered ? `답하지 않은 문제가 ${unanswered}개 있습니다.` : "";
-    result.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-  document.getElementById("retry").onclick = () => { renderQuiz(panel); window.scrollTo({ top: 0, behavior: "smooth" }); };
-}
-
-/* ---------- 참고자료 ---------- */
-function renderRefs(panel) {
-  const items = DB.refs.filter(r => r.area === state.area || r.area === "공통");
-  if (!items.length) { panel.innerHTML = emptyBox("이 분야에 등록된 참고자료가 없습니다."); return; }
-  panel.innerHTML = `<div class="list">${items.map((r, i) => {
-    const yt = youtubeId(r.url);
-    return `
-    <div class="item">
-      <div class="info">
-        <div class="title">${titleOf(r.title)}</div>
-        ${r.desc ? `<div class="desc">${esc(r.desc)}</div>` : ""}
-        ${!r.url ? '<div class="desc missing">URL 미입력</div>' : ""}
-      </div>
-      <div class="actions">
-        ${r.kind ? `<span class="tag">${esc(r.kind)}</span>` : ""}
-        ${yt ? `<button class="btn" data-play="${i}"><i class="fa-solid fa-play"></i> 재생</button>` : ""}
-        ${r.url ? `<a class="btn primary" href="${esc(r.url)}" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> 열기</a>` : ""}
-      </div>
-      <div class="slot" id="ref-${i}"></div>
-    </div>`;
-  }).join("")}</div>`;
-  panel.onclick = e => {
-    const b = e.target.closest("[data-play]");
-    if (!b) return;
-    const slot = document.getElementById("ref-" + b.dataset.play);
-    if (slot.innerHTML) { slot.innerHTML = ""; b.innerHTML = '<i class="fa-solid fa-play"></i> 재생'; }
-    else { slot.innerHTML = playerHtml(items[b.dataset.play].url); b.innerHTML = '<i class="fa-solid fa-xmark"></i> 닫기'; }
-  };
-}
-
-load();
+parseHash();
+render();
 </script>
 </body>
 </html>
